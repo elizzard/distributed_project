@@ -8,6 +8,7 @@ keyed by a prefix string (location)
 */
 
 #include "radix_trie.h"
+using namespace std;
 
 // TNode constructor
 TNode::TNode(string k, TNode* pt){
