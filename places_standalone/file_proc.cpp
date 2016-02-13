@@ -138,15 +138,22 @@ bool stripDesignation(string& s){
 	return false;
 }
 	
-
+/*TEST*/
 int main(){
-	RadixTrie* db = parseFile(TEST_F_NAME);
-	db->printTraverse();
+/* small test */ 
+//	RadixTrie* db = parseFile(TEST_F_NAME);
+//	db->printTraverse();
+	
+	RadixTrie* db = parseFile(PLACES_F_NAME);
 	// get name
+	string s = "FLSt. Augustine";
 	// strip designation
 	// do search
+	Coord xy(360,360); 
+	int res = db->find(s, xy);
 	// if not found, return null
 	// if found, call to airports
+	cout<< res << " "<<s<<" ["<<xy.lat << "," << xy.lon <<"]"<<endl;
 	// fwd KNN results
 	
 	delete db;
