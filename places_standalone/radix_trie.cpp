@@ -256,7 +256,7 @@ void RadixTrie::recursivePrintPreorder(TNode* n){
 }
 
 // test program
-int main(){
+void test(){
 	RadixTrie r = RadixTrie();
 	r.printTraverse();
 	r.insert("amnesty", 1,0);
@@ -282,3 +282,5 @@ int main(){
 		cout<< res << " "<<words[i]<<" ["<<xy.lat << "," << xy.lon <<"]"<<endl;	
 	}
 }
+
+// int main () { test(); return 0;}

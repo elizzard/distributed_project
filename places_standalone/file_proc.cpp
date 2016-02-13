@@ -7,6 +7,8 @@ of structures
 */
 
 #include "file_proc.h"
+#include <iostream>
+#include <fstream>
 
 RadixTrie* parseFile(string fileName){
 	
@@ -38,14 +40,15 @@ RadixTrie* parseFile(string fileName){
 
 // name field needs major processing, may spawn more than one record per line
 void process_record(string& dataLine, RadixTrie* db) {
-	int pos;
+	size_t pos;
 	const string WHITESPACE = " \t\f\v\n\r"; 
-	string name, state, lon, lat;
+	string name, state, num;
+	float lon, lat;
 			
 	state = dataLine.substr(STATE_POS,STATE_SIZE);
 	name = dataLine.substr(NAME_POS,NAME_SIZE);			
-	lat = dataLine.substr(LAT_POS,LAT_SIZE);
-	lon = dataLine.substr(LONG_POS,LONG_SIZE);
+	lat = stof(dataLine.substr(LAT_POS,LAT_SIZE));
+	lon = stof(dataLine.substr(LONG_POS,LONG_SIZE));
 			
 	// name needs LOTS of formatting
 	// need to erase trailing whitespace
@@ -56,50 +59,95 @@ void process_record(string& dataLine, RadixTrie* db) {
 		pos = name.find_last_not_of(WHITESPACE,pos-1); // skip to next word
 	}
 	name.erase(pos+1);
+	stripDesignation(name);
 		
 	//split on "-" or "(...)"
-	int paren_pos = name.find_last_of(')');
-	
-	int dash_pos = name.find_last_of('-');
+	size_t paren_pos = name.find_last_of(')');
+	size_t dash_pos = name.find_first_of('-');
 	
 	if(string::npos== paren_pos && string::npos== dash_pos){
 		// append to state
 		state.append(name);
 		// push to database
-		db.insert(state, stof(lat), stof(lon));
+		db->insert(state, lat, lon);
 		return;
 	}
 	// else parse multiple entries
-	
-	// keep place designation(town, city, CDP, village, borough, municipality, comunidad, zona urbana ...)
-	pos = name.find_last_of(WHITESPACE);
-	string designation = name.substr(pos);
-	name.erase(pos);
-	
-	while(string::npos != paren_pos){
-		int begin_paren = name.find_last_of('(');
+	if(string::npos != paren_pos){
+		size_t begin_paren = name.find_last_of('(');
 		string sub_name = name.substr(begin_paren+1,paren_pos - begin_paren -1);
 		
-		sub_name.append(designation);
 		string st = state;   // copy, b/c don't want to mutate state
 		st.append(sub_name);
-		db.insert(st, stof(lat), stof(lon));
+		db->insert(st, lat, lon);
 		
-		name.replace(begin_paren, paren_pos - begin_paren +1,"");
-		paren_pos = name.find_last_of(')');
+		// trim string
+		name.replace(begin_paren-1, paren_pos - begin_paren +2,"");
+		
+		// if no dash, push remaining name to db
+		if (string::npos == dash_pos){
+			state.append(name);
+			db->insert(state, lat, lon);
+			return;
+		}
 	}
 	
-	// if there's more than one dash, or the length of
-	// left split string is too small (1-2 characters), it is probably all one name
-	while(string::npos != dash_pos){
+	// if there's more than one dash before first space, or the length of
+	// left split string is too small (1-2 characters), or word after dash
+	// starts with a lowercase, then it is probably all one name
+	if(string::npos != dash_pos){
+		size_t dash_pos_next = name.find_first_of('-', dash_pos+1);
+		// all one hyphenated word
+		if(string::npos != dash_pos_next || 
+			name[dash_pos+1] == tolower(name[dash_pos+1]) ||
+			dash_pos < 2){ 
+			state.append(name);
+			db->insert(state, lat, lon);
+			return;
+		}
+		// else need to split
+		string st = state;   // copy prefix for 2nd name entry
+		st.append(name.substr(0,dash_pos));
+		db->insert(st, lat, lon);
 		
+		state.append(name.substr(dash_pos+1));
+		db->insert(state, lat, lon);
 	}
 }		
 
+// if the last word in the string is a designation identifier, erase it
+bool stripDesignation(string& s){
+	const int D_SIZE = 9;
+	const string DESIGNATIONS[D_SIZE] = {"town", "city", "CDP", "County",
+		"village", "borough", "municipality", "comunidad", "urbana"};
+	const string WHITESPACE = " \t\f\v\n\r"; 
+	
+	size_t pos = s.find_last_of(WHITESPACE);
+	string tail = s.substr(pos+1);
+	
+	for (int i=0; i<D_SIZE; i++){
+		if ( DESIGNATIONS[i]== tail) { 
+			s.erase(pos);
+			if (i == D_SIZE-1){ // need to delete preceding "zona" as well
+				pos = s.find_last_of(WHITESPACE);
+				s.erase(pos);
+			}
+			return true;
+		}
+	}
+	return false;
+}
+	
+
 int main(){
 	RadixTrie* db = parseFile(TEST_F_NAME);
-	
-	
+	db->printTraverse();
+	// get name
+	// strip designation
+	// do search
+	// if not found, return null
+	// if found, call to airports
+	// fwd KNN results
 	
 	delete db;
 	return 0;

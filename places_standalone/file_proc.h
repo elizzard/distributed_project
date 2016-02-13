@@ -5,10 +5,8 @@ file_proc.h
 Provides the function that parses places2k.txt into an array
 of structures
 */
-#include <iostream>
-#include <fstream>
+
 #include <string>
-#include <algorithm>
 #include "radix_trie.h"
 
 using namespace std;
@@ -29,3 +27,5 @@ using namespace std;
 
 void process_record(string& dataLine, RadixTrie* db);
 RadixTrie* parseFile(string fileName);
+bool stripDesignation(string& s);
+
