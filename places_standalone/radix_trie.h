@@ -5,6 +5,8 @@ radix_trie.h
 Declarations for RadixTrie data structure
 V2.0
 permits special characters (any)
+V2.1
+case-insensitive compare
 */
 
 #include <string>
@@ -12,10 +14,8 @@ permits special characters (any)
 #include <list>
 
 // alphabet + " " + "'"
-#define NUM_AB_CHILDREN 29
+#define NUM_AB_CHILDREN 27
 #define SPACE_SPOT 26
-#define DOT_SPOT 27
-#define APOSTROPHE_SPOT 28
 
 struct Coord{
 	float lat;
@@ -60,5 +60,5 @@ private:
 	void recursiveTNodeDelete(TNode* node);	
 	void recursivePrintPreorder(TNode* node);
 	TNode* match(std::string* word, TNode* start, int& word_pos, int& node_pos);
-	int mapToBranch(char key);
+	bool noCaseEquals(char x, char y);
 };

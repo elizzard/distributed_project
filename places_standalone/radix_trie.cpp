@@ -6,6 +6,8 @@ Describes the Radix Trie data structure to store coodrinates,
 keyed by a prefix string (which represents location)
 V2.0
 permits special characters (any)
+V2.1
+case-insensitive compare
 */
 
 #include "radix_trie.h"
@@ -69,8 +71,6 @@ int TNode::mapToBranch(char key){
 	if( key >='a' && key <= 'z'){ return (int)(key - 'a');}
 	if( key >='A' && key <= 'Z'){ return (int)(key - 'A');}
 	if( key == ' '){ return SPACE_SPOT; }
-	if( key == '.'){ return DOT_SPOT; }
-	if( key == '\''){ return APOSTROPHE_SPOT;}
 	return -1;
 }
 
@@ -199,7 +199,7 @@ TNode* RadixTrie::match(string* word, TNode* start, int& word_pos, int& node_pos
 		// explore this node's key
 		int nmax = curr->key.length();
 		while(ni<nmax && wi <wmax) {
-			if(curr->key[ni] != (*word)[wi]){ // mismatch found
+			if(!noCaseEquals(curr->key[ni],(*word)[wi])){ // mismatch found
 				done = true;
 				break;
 			}
@@ -228,6 +228,10 @@ TNode* RadixTrie::match(string* word, TNode* start, int& word_pos, int& node_pos
 	word_pos = wi;
 	node_pos = ni;
 	return curr;
+}
+
+bool RadixTrie::noCaseEquals(char x, char y){
+	return tolower(x) == tolower(y);
 }
 
 void RadixTrie::printTraverse(){
@@ -271,7 +275,7 @@ int main(){
 	r.printTraverse();
 	
 	Coord xy(360,360); 
-	string words[6] =  {"boom", "i'm fine", "all", "intern", "all*", "internshipdom"};
+	string words[6] =  {"boom", "I'm Fine", "all", "intern", "all*", "internshipdom"};
 	for (int i = 0; i<6; i++){
 		cout << "find("<< words[i]<<") : ";
 		int res = r.find(words[i], xy);

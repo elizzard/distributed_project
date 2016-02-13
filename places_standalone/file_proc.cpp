@@ -8,9 +8,8 @@ of structures
 
 #include "file_proc.h"
 
-RadixTrie* parseFile(){
+RadixTrie* parseFile(string fileName){
 	
-	string fileName = PLACES_F_NAME;
 	ifstream data;
 	RadixTrie* db = new RadixTrie();
 			
@@ -59,41 +58,49 @@ void process_record(string& dataLine, RadixTrie* db) {
 	name.erase(pos+1);
 		
 	//split on "-" or "(...)"
-	int paren_pos = name.find_first_of('(');
+	int paren_pos = name.find_last_of(')');
 	
-	int dash_pos = name.find_first_of('-');
+	int dash_pos = name.find_last_of('-');
 	
-	if(paren_pos >= name.length() && dash_pos >= name.length()){
-		// make all lowercase? - yes
-		make_lowercase(name);
+	if(string::npos== paren_pos && string::npos== dash_pos){
 		// append to state
 		state.append(name);
 		// push to database
 		db.insert(state, stof(lat), stof(lon));
 		return;
 	}
-	
 	// else parse multiple entries
-	// mark designation start
+	
+	// keep place designation(town, city, CDP, village, borough, municipality, comunidad, zona urbana ...)
 	pos = name.find_last_of(WHITESPACE);
+	string designation = name.substr(pos);
+	name.erase(pos);
 	
-		// keep place designation(town, city, CDP, village, borough, etc.)
-		string designation = name.substr(pos);
+	while(string::npos != paren_pos){
+		int begin_paren = name.find_last_of('(');
+		string sub_name = name.substr(begin_paren+1,paren_pos - begin_paren -1);
+		
+		sub_name.append(designation);
+		string st = state;   // copy, b/c don't want to mutate state
+		st.append(sub_name);
+		db.insert(st, stof(lat), stof(lon));
+		
+		name.replace(begin_paren, paren_pos - begin_paren +1,"");
+		paren_pos = name.find_last_of(')');
+	}
 	
-	// make all lowercase? - yes
-	
-	
-	// append to state
-	state.append(name);
-	// push to database
-	db.insert(state, stof(lat), stof(lon));
+	// if there's more than one dash, or the length of
+	// left split string is too small (1-2 characters), it is probably all one name
+	while(string::npos != dash_pos){
+		
+	}
 }		
 
-void make_lowercase(string& s){
-	
-}
-
 int main(){
+	RadixTrie* db = parseFile(TEST_F_NAME);
 	
+	
+	
+	delete db;
 	return 0;
 }

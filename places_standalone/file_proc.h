@@ -25,6 +25,7 @@ using namespace std;
 
 // data already sorted, state first
 #define PLACES_F_NAME "places2k.txt"
+#define TEST_F_NAME "test.txt"
 
 void process_record(string& dataLine, RadixTrie* db);
-RadixTrie* parseFile();
+RadixTrie* parseFile(string fileName);
