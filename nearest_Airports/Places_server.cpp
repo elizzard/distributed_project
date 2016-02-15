@@ -59,7 +59,7 @@ get_nearest_airports_1_svc(coordinates *argp, struct svc_req *rqstp)
         }
 	#endif  /* DEBUG */
 
-        nearestairports *nearestnames = get_five_nearest_airports_1(&points, clnt);
+        nearestairportnames *nearestnames = get_five_nearest_airports_1(&points, clnt);
         if (nearestnames == (nearestairports *) NULL) {
                 clnt_perror (clnt, "call failed");
         }

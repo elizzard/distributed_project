@@ -33,7 +33,7 @@ airport_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 
 	case GET_FIVE_NEAREST_AIRPORTS:
 		_xdr_argument = (xdrproc_t) xdr_coordinates_airport;
-		_xdr_result = (xdrproc_t) xdr_nearestairports;
+		_xdr_result = (xdrproc_t) xdr_nearestairportnames;
 		local = (char *(*)(char *, struct svc_req *)) get_five_nearest_airports_1_svc;
 		break;
 

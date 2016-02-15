@@ -1,6 +1,5 @@
 const MAXLEN = 255;
-typedef string airportname<MAXLEN>;
-typedef string nearestairports<MAXLEN>;
+typedef string nearestairportnames<MAXLEN>;
 
 struct coordinates_airport{
 	double lat;
@@ -9,7 +8,7 @@ struct coordinates_airport{
 
 program AIRPORT_PROG {
         version AIRPORT_VERS {
-                nearestairports GET_FIVE_NEAREST_AIRPORTS(coordinates_airport) = 1;
+                nearestairportnames GET_FIVE_NEAREST_AIRPORTS(coordinates_airport) = 1;
 } = 1;
 } = 0x37777747;
 

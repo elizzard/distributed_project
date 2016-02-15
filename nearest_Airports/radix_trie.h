@@ -9,6 +9,10 @@ V2.1
 case-insensitive compare
 */
 
+#ifndef _RADIX_TRIE_H_RPCGEN
+#define _RADIX_TRIE_H_RPCGEN
+
+#endif
 #include <string>
 #include <iostream>
 #include <list>

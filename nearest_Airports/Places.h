@@ -23,7 +23,6 @@ struct coordinates {
 	double lon;
 };
 typedef struct coordinates coordinates;
-
 #define PLACES_PROG 0x37777735
 #define PLACES_VERS 1
 

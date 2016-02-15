@@ -140,10 +140,10 @@ static double dist_sq(double lat1, double lon1, double lat2, double lon2)
       return(dist);
 }
 
-nearestairports *
+nearestairportnames *
 get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp)
 {
-	static nearestairports  result;
+	static nearestairportnames  result;
 
 	
         double arr1[3];
