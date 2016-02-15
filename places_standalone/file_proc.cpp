@@ -168,7 +168,7 @@ int main(){
 	// get name (from client = fxn argument list)
 	string s = "FLSt. Augustine";				
 	// strip designation
-	stripDesignation(s);	// shoudld do nothing
+	stripDesignation(s);	// shoudld do nothing in this case
 	// do search
 	Coord xy(360,360); 		// this is where coordinate values will be returned
 	int res = db->find(s, xy);	
