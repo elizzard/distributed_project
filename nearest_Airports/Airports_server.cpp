@@ -143,7 +143,7 @@ static double dist_sq(double lat1, double lon1, double lat2, double lon2)
 airports_server_ret*
 get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp)
 {
-	cout<<"In Airports Server"<<endl;
+	
 	static airports_server_ret  result;
 	xdr_free((xdrproc_t)xdr_airports_server_ret, (char *)&result);
 	
@@ -176,10 +176,13 @@ get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp
                 kd_res_item(results,arr2);
                 dist = dist_sq(arr1[0],arr1[1],arr2[0],arr2[1]);
                 string key = genKey(arr2[0],arr2[1]);
-                Result res;
+		if(dist>0.0)
+	{
+	        Result res;
                 res.distance = dist;
                 res.airport = airportMap[key];
                 airportResults.push_back(res);
+	}
                 kd_res_next(results);
                 count++;
         }
@@ -205,11 +208,8 @@ get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp
 	airportsList = (char*)malloc(sizeof(nearestairportnames));
 	airportsList = StrToChar(str);
 	
-	//result.airports_server_ret_u.airports =(nearestairportnames)malloc(sizeof(nearestairportnames)); 
-        //result.airports_server_ret_u.airports = airportnames ;
+
 	*airportnames =airportsList;
 	result.err=0;
-	//result.airports_server_ret_u.airports = *airportnames;
-	cout<<"FINALLLLYYYy"<< result.airports_server_ret_u.airports<<endl;
 	return &result;
 }

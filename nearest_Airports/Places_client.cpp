@@ -64,10 +64,8 @@ main (int argc, char *argv[])
 	char *state = argv[3];
 	int size = strlen(city) + strlen(state) +2;
 	char *name = (char *)malloc(size);
-	strcpy(name,city);
-	strcat(name," ");
-	strcat(name,state);
-	cout<<"Place name is "<<name<<endl;
+	strcpy(name,state);
+	strcat(name,city);
 	places_prog_1 (name,host);
 exit (0);
 }
