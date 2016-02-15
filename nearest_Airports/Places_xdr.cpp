@@ -24,15 +24,3 @@ xdr_nearestairports (XDR *xdrs, nearestairports *objp)
 		 return FALSE;
 	return TRUE;
 }
-
-bool_t
-xdr_coordinates (XDR *xdrs, coordinates *objp)
-{
-	register int32_t *buf;
-
-	 if (!xdr_double (xdrs, &objp->lat))
-		 return FALSE;
-	 if (!xdr_double (xdrs, &objp->lon))
-		 return FALSE;
-	return TRUE;
-}
