@@ -7,6 +7,7 @@
 #include "Places.h"
 #include <string>
 #include <cstring>
+#include "file_proc.h"
 
 NearestAirports *
 get_airports_1_svc(LocationArgs *argp, struct svc_req *rqstp)
@@ -16,15 +17,29 @@ get_airports_1_svc(LocationArgs *argp, struct svc_req *rqstp)
 	/** server code here insert */
 	/* free previous result */
     xdr_free((xdrproc_t)xdr_NearestAirports, (char *)&result);
-		
+	
+	/* process input arguments*/
 	std::string name = argp->state;
 	name.append(argp->name);
+	stripDesignation(name);
 	 
-	name.append(std::to_string(name.length()));
+	/* search db */ 
+	Coord xy(360,360);    /* struct to return into*/
+	int ret_code = db->find(name, xy);
+	
+	/* interpret results */
+	std::string s_res;
+	if (ret_code < 0){
+		s_res = "Location not found";
+	}
+	else {
+		s_res = "Location: (";
+		s_res+= std::to_string(xy.lat)+","+std::to_string(xy.lon)+")"; 
+	}
 	
 	/* allocate memory! */
-	result = (NearestAirports)malloc(sizeof(char)*(name.length()+1));
-	std::strcpy (result, name.c_str());
+	result = (NearestAirports)malloc(sizeof(char)*(s_res.length()+1));
+	std::strcpy (result, s_res.c_str());
 	/** end server code insert */ 
 
 	return &result;

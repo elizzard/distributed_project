@@ -11,10 +11,14 @@
 #include <memory.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include "file_proc.h"
 
 #ifndef SIG_PF
 #define SIG_PF void(*)(int)
 #endif
+
+/** global storage declaration*/
+RadixTrie *db;
 
 static void
 places_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
@@ -52,6 +56,7 @@ places_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 	}
 	if (!svc_freeargs (transp, (xdrproc_t) _xdr_argument, (caddr_t) &argument)) {
 		fprintf (stderr, "%s", "unable to free arguments");
+		delete db; /* cleanup memory */
 		exit (1);
 	}
 	return;
@@ -61,31 +66,39 @@ int
 main (int argc, char **argv)
 {
 	register SVCXPRT *transp;
+	
+	/** initialize global storage */
+	db = parseFile(TEST_F_NAME);
 
 	pmap_unset (PLACES_PROG, PLACES_VERS);
 
 	transp = svcudp_create(RPC_ANYSOCK);
 	if (transp == NULL) {
 		fprintf (stderr, "%s", "cannot create udp service.");
+		delete db; /* cleanup memory */
 		exit(1);
 	}
 	if (!svc_register(transp, PLACES_PROG, PLACES_VERS, places_prog_1, IPPROTO_UDP)) {
 		fprintf (stderr, "%s", "unable to register (PLACES_PROG, PLACES_VERS, udp).");
+		delete db; /* cleanup memory */
 		exit(1);
 	}
 
 	transp = svctcp_create(RPC_ANYSOCK, 0, 0);
 	if (transp == NULL) {
 		fprintf (stderr, "%s", "cannot create tcp service.");
+		delete db; /* cleanup memory */
 		exit(1);
 	}
 	if (!svc_register(transp, PLACES_PROG, PLACES_VERS, places_prog_1, IPPROTO_TCP)) {
 		fprintf (stderr, "%s", "unable to register (PLACES_PROG, PLACES_VERS, tcp).");
+		delete db; /* cleanup memory */
 		exit(1);
 	}
 
 	svc_run ();
 	fprintf (stderr, "%s", "svc_run returned");
+	delete db; /* cleanup memory */
 	exit (1);
 	/* NOTREACHED */
 }
