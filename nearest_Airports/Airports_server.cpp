@@ -145,7 +145,7 @@ get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp
 {
 	cout<<"In Airports Server"<<endl;
 	static airports_server_ret  result;
-
+	xdr_free((xdrproc_t)xdr_airports_server_ret, (char *)&result);
 	
         double arr1[3];
         arr1[0] = argp->lat;
@@ -200,8 +200,16 @@ get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp
                 str = str.append(out.str());
                 count1++;
         }
-        result.airports_server_ret_u.airports = StrToChar(str);
+	nearestairportnames *airportnames = &result.airports_server_ret_u.airports;
+	nearestairportnames airportsList;
+	airportsList = (char*)malloc(sizeof(nearestairportnames));
+	airportsList = StrToChar(str);
+	
+	//result.airports_server_ret_u.airports =(nearestairportnames)malloc(sizeof(nearestairportnames)); 
+        //result.airports_server_ret_u.airports = airportnames ;
+	*airportnames = airportsList;
 	result.err=0;
+	result.airports_server_ret_u.airports = *airportnames;
 	cout<<"FINALLLLYYYy"<< result.airports_server_ret_u.airports<<endl;
 	return &result;
 }

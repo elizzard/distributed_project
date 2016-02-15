@@ -13,7 +13,7 @@ void; /*error occured, nothing returned*/
 };
 program AIRPORT_PROG {
         version AIRPORT_VERS {
-                nearestairportnames GET_FIVE_NEAREST_AIRPORTS(coordinates_airport) = 1;
+                airports_server_ret GET_FIVE_NEAREST_AIRPORTS(coordinates_airport) = 1;
 } = 1;
 } = 0x37777747;
 

@@ -66,7 +66,7 @@ get_coordinates_1_svc(places_input *argp, struct svc_req *rqstp)
         /*points.lat = result.lat;
         points.lon = result.lon;*/
 	points.lat = 33.58;
-        points.lon = -85.85;;
+        points.lon = -85.85;
 
         #ifndef DEBUG
         clnt = clnt_create (inputs.hostname, AIRPORT_PROG, AIRPORT_VERS, "tcp");
@@ -84,11 +84,13 @@ get_coordinates_1_svc(places_input *argp, struct svc_req *rqstp)
         clnt_destroy (clnt);
         #endif   /* DEBUG */
 	cout<<"After function call to airports server"<<endl;
-        //cout<<"GOT THE OUTPUT"<<nearestnames<<endl;
+        
 	cout<<"GOTITTTTTTTTT"<<nearestnames->airports_server_ret_u.airports;
-	nearestairportnames output_from_airport = nearestnames->airports_server_ret_u.airports;
+	nearestairportnames output_from_airport =nearestnames->airports_server_ret_u.airports;
 	string sss = output_from_airport;
-	nearestairports nap =toChar(sss);	
+	nearestairports nap;
+	nap =(nearestairports)malloc(sizeof(output_from_airport));
+	nap = output_from_airport;
         airportnames.airports_ret_u.airports = nap;
         cout<<"LAAAAAAAAAAAA"<<airportnames.airports_ret_u.airports;
 	airportnames.err = 0;
