@@ -4,6 +4,8 @@ file_proc.cpp
 
 Provides the function that parses places2k.txt into an array
 of structures
+
+NOTE: use <g++ -std=c++11 *.cpp>
 */
 
 #include "file_proc.h"
@@ -144,3 +146,43 @@ bool stripDesignation(string& s){
 	or something in makefile needs to tell linker to ignore this main 
 	( idk how, easier to just comment it out)
 */
+int main(){
+/* small test */ 
+//	RadixTrie* db = parseFile(TEST_F_NAME);
+//	db->printTraverse();
+	
+	/*  -------------------------------------------------------------
+		This goes into *_svc.c file (which says do not modify)
+		right into main(), as early in the function as possible.
+		Don't forget to #include "file_proc.h" (or add this line to .h generated from .x)
+	*/
+	RadixTrie* db = parseFile(PLACES_F_NAME);	// Maybe global variable?
+	
+	
+	/* -------------------------------------------------------------
+		Something like this pseudocode-ish goes  into *_server.c
+		whatever is the equivalent of readdir_1_svc from HW1
+		Don't forget to #include "file_proc.h" (or add this line to .h generated from .x)
+	*/
+	// may need to xdr_free on any leftover linked list received from airports
+	// get name (from client = fxn argument list)
+	string s = "FLSt. Augustine";				
+	// strip designation
+	stripDesignation(s);	// shoudld do nothing in this case
+	// do search
+	Coord xy(360,360); 		// this is where coordinate values will be returned
+	int res = db->find(s, xy);	
+	// value of res explains the result:
+	// if not found (res <0), return NULL
+	// else if found (res >=0), call airports fxn ...
+	cout<< res << " "<<s<<" ["<<xy.lat << "," << xy.lon <<"]"<<endl;
+	// return-fwd KNN results
+	
+	/* -------------------------------------------------------------
+		this delete also goes into *_svc.c file (which says do not modify)
+		at the very end of main().
+	*/
+	delete db;
+	
+	return 0;
+}
