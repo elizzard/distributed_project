@@ -140,11 +140,11 @@ static double dist_sq(double lat1, double lon1, double lat2, double lon2)
       return(dist);
 }
 
-nearestairportnames *
+airports_server_ret*
 get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp)
 {
 	cout<<"In Airports Server"<<endl;
-	static nearestairportnames  result;
+	static airports_server_ret  result;
 
 	
         double arr1[3];
@@ -200,7 +200,8 @@ get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp
                 str = str.append(out.str());
                 count1++;
         }
-        result = StrToChar(str);
-	cout<<"FINALLLLYYYy"<<result<<endl;
+        result.airports_server_ret_u.airports = StrToChar(str);
+	result.err=0;
+	cout<<"FINALLLLYYYy"<< result.airports_server_ret_u.airports<<endl;
 	return &result;
 }

@@ -24,3 +24,44 @@ xdr_nearestairports (XDR *xdrs, nearestairports *objp)
 		 return FALSE;
 	return TRUE;
 }
+bool_t
+xdr_host (XDR *xdrs, host *objp)
+{
+        register int32_t *buf;
+
+         if (!xdr_string (xdrs, objp, MAXLEN))
+                 return FALSE;
+        return TRUE;
+}
+
+bool_t
+xdr_places_input (XDR *xdrs, places_input *objp)
+{
+        register int32_t *buf;
+
+         if (!xdr_airportname (xdrs, &objp->apname))
+                 return FALSE;
+         if (!xdr_host (xdrs, &objp->hostname))
+                 return FALSE;
+        return TRUE;
+}
+bool_t
+xdr_airports_ret(XDR *xdrs, airports_ret *objp)
+{
+        register int32_t *buf;
+
+         if (!xdr_int (xdrs, &objp->err))
+                 return FALSE;
+        switch (objp->err) {
+        case 0:
+                 if (!xdr_nearestairports (xdrs, &objp->airports_ret_u.airports))
+                         return FALSE;
+                break;
+        case 1:
+                break;
+        default:
+                return FALSE;
+        }
+        return TRUE;
+}
+

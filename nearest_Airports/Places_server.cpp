@@ -15,13 +15,22 @@ struct coordinates
 	double lat;
 	double lon;
 };
-nearestairports* 
-get_coordinates_1_svc(airportname *argp, struct svc_req *rqstp)
+static char* toChar(string str){
+  char *ch=new char[str.size()+1];
+  ch[str.size()]=0;
+  memcpy(ch,str.c_str(),str.size());
+  return ch;
+}
+airports_ret* 
+get_coordinates_1_svc(places_input *argp, struct svc_req *rqstp)
 {
 	cout<<"In Places_Server"<<endl;
-	//static coordinates result ;
-	static nearestairports airportnames;
-	string s = *argp;
+	static coordinates result ;
+	static airports_ret airportnames;
+	places_input inputs;
+	inputs.apname = argp->apname;
+	inputs.hostname = argp->hostname;
+	string s = inputs.apname;
 	cout<<"Airport name in Places_server"<<s<<endl;				
 	/* strip designation*/
 	stripDesignation(s);	/* shoudld do nothing*/
@@ -34,7 +43,10 @@ get_coordinates_1_svc(airportname *argp, struct svc_req *rqstp)
 	/* else if found (res >=0), call airports fxn ...*/
 	/*cout<< res << " "<<s<<" ["<<xy.lat << "," << xy.lon <<"]"<<endl;*/
 	/*if(res <0)
-	return NULL;
+	{
+	airportnames.err=1;
+	return &airportnames;
+	}
 
 	else
 	{
@@ -49,32 +61,37 @@ get_coordinates_1_svc(airportname *argp, struct svc_req *rqstp)
 	/* return-fwd KNN results*/
 	 CLIENT *clnt;
          coordinates_airport  points;
-	 nearestairportnames *nearestnames;
+	airports_server_ret *nearestnames;
+	 
         /*points.lat = result.lat;
         points.lon = result.lon;*/
 	points.lat = 33.58;
         points.lon = -85.85;;
 
         #ifndef DEBUG
-        clnt = clnt_create ("cs2.seattleu.edu", AIRPORT_PROG, AIRPORT_VERS, "tcp");
+        clnt = clnt_create (inputs.hostname, AIRPORT_PROG, AIRPORT_VERS, "tcp");
         if (clnt == NULL) {
-                clnt_pcreateerror ("cs2.seattleu.edu");
+                clnt_pcreateerror (inputs.hostname);
                 exit (1);
         }
         #endif  /* DEBUG */
         cout<<"In Places server airport code"<<"lat"<<points.lat<<"lon"<<points.lon<<endl;
         nearestnames = get_five_nearest_airports_1(&points, clnt);
-	 if (nearestnames == (nearestairportnames *) NULL) {
+	 if (nearestnames == (airports_server_ret *) NULL) {
                 clnt_perror (clnt, "call failed");
         }
         #ifndef DEBUG
         clnt_destroy (clnt);
         #endif   /* DEBUG */
 	cout<<"After function call to airports server"<<endl;
-        cout<<"GOT THE OUTPUT"<<nearestnames<<endl;
-
-        airportnames = *nearestnames;
-        cout<<"LAAAAAAAAAAAA"<<airportnames;
+        //cout<<"GOT THE OUTPUT"<<nearestnames<<endl;
+	cout<<"GOTITTTTTTTTT"<<nearestnames->airports_server_ret_u.airports;
+	nearestairportnames output_from_airport = nearestnames->airports_server_ret_u.airports;
+	string sss = output_from_airport;
+	nearestairports nap =toChar(sss);	
+        airportnames.airports_ret_u.airports = nap;
+        cout<<"LAAAAAAAAAAAA"<<airportnames.airports_ret_u.airports;
+	airportnames.err = 0;
         return &airportnames;
 
 }

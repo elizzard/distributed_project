@@ -8,15 +8,15 @@
 /* Default timeout can be changed using clnt_control() */
 static struct timeval TIMEOUT = { 25, 0 };
 
-nearestairports *
-get_coordinates_1(airportname *argp, CLIENT *clnt)
+airports_ret *
+get_coordinates_1(places_input *argp, CLIENT *clnt)
 {
-        static nearestairports clnt_res;
+        static airports_ret clnt_res;
 
         memset((char *)&clnt_res, 0, sizeof(clnt_res));
         if (clnt_call (clnt, GET_COORDINATES,
-                (xdrproc_t) xdr_airportname, (caddr_t) argp,
-                (xdrproc_t) xdr_nearestairports, (caddr_t) &clnt_res,
+                (xdrproc_t) xdr_places_input, (caddr_t) argp,
+                (xdrproc_t) xdr_airports_ret, (caddr_t) &clnt_res,
                 TIMEOUT) != RPC_SUCCESS) {
                 return (NULL);
         }

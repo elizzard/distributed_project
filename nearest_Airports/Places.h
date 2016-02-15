@@ -11,27 +11,40 @@
 extern "C" {
 #endif
 
-#define MAXLEN 255
+#define MAXLEN 512
 
 
 typedef char *airportname;
 
 typedef char *nearestairports;
+typedef char *host;
+struct places_input {
+        airportname apname;
+        host hostname;
+};
+typedef struct places_input places_input;
 
+struct airports_ret {
+        int err;
+        union {
+                nearestairports airports;
+        } airports_ret_u;
+};
+typedef struct airports_ret airports_ret;
 #define PLACES_PROG 0x37777735
 #define PLACES_VERS 1
 
 #if defined(__STDC__) || defined(__cplusplus)
 #define GET_COORDINATES 1
-extern  nearestairports * get_coordinates_1(airportname *, CLIENT *);
-extern  nearestairports * get_coordinates_1_svc(airportname *, struct svc_req *);
+extern  airports_ret * get_coordinates_1(places_input *, CLIENT *);
+extern  airports_ret * get_coordinates_1_svc(places_input *, struct svc_req *);
 
 extern int places_prog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
 #define GET_COORDINATES 1
-extern  nearestairports * get_coordinates_1();
-extern  nearestairports * get_coordinates_1_svc();
+extern  airports_ret * get_coordinates_1();
+extern  airports_ret * get_coordinates_1_svc();
 
 extern int places_prog_1_freeresult ();
 #endif /* K&R C */
@@ -41,9 +54,16 @@ extern int places_prog_1_freeresult ();
 #if defined(__STDC__) || defined(__cplusplus)
 extern  bool_t xdr_airportname (XDR *, airportname*);
 extern  bool_t xdr_nearestairports (XDR *, nearestairports*);
+extern  bool_t xdr_host (XDR *, host*);
+extern  bool_t xdr_places_input (XDR *, places_input*);
+extern  bool_t xdr_airports_ret (XDR *, airports_ret*);
 #else /* K&R C */
 extern bool_t xdr_airportname ();
 extern bool_t xdr_nearestairports ();
+extern bool_t xdr_host ();
+extern bool_t xdr_places_input ();
+extern bool_t xdr_airports_ret ();
+
 
 #endif /* K&R C */
 

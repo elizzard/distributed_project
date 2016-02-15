@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-#define MAXLEN 255
+#define MAXLEN 512
 
 typedef char *nearestairportnames;
 
@@ -22,20 +22,29 @@ struct coordinates_airport {
 };
 
 typedef struct coordinates_airport coordinates_airport;
+struct airports_server_ret {
+        int err;
+        union {
+                nearestairportnames airports;
+        } airports_server_ret_u;
+};
+typedef struct airports_server_ret airports_server_ret;
+
 
 #define AIRPORT_PROG 0x37777747
 #define AIRPORT_VERS 1
 
 #if defined(__STDC__) || defined(__cplusplus)
 #define GET_FIVE_NEAREST_AIRPORTS 1
-extern  nearestairportnames * get_five_nearest_airports_1(coordinates_airport *, CLIENT *);
-extern  nearestairportnames * get_five_nearest_airports_1_svc(coordinates_airport *, struct svc_req *);
+extern  airports_server_ret * get_five_nearest_airports_1(coordinates_airport *, CLIENT *);
+extern  airports_server_ret * get_five_nearest_airports_1_svc(coordinates_airport *, struct svc_req *);
 extern int airport_prog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
+
 
 #else /* K&R C */
 #define GET_FIVE_NEAREST_AIRPORTS 1
-extern  nearestairportnames * get_five_nearest_airports_1();
-extern  nearestairportnames * get_five_nearest_airports_1_svc();
+extern  airports_server_ret * get_five_nearest_airports_1();
+extern  airports_server_ret * get_five_nearest_airports_1_svc();
 extern int airport_prog_1_freeresult ();
 #endif /* K&R C */
 
@@ -44,11 +53,11 @@ extern int airport_prog_1_freeresult ();
 #if defined(__STDC__) || defined(__cplusplus)
 extern  bool_t xdr_nearestairportnames (XDR *, nearestairportnames*);
 extern  bool_t xdr_coordinates_airport (XDR *, coordinates_airport*);
-
+extern  bool_t xdr_airports_server_ret (XDR *, airports_server_ret*);
 #else /* K&R C */
 extern bool_t xdr_nearestairportnames ();
 extern bool_t xdr_coordinates_airport ();
-
+extern bool_t xdr_airports_server_ret ();
 #endif /* K&R C */
 
 #ifdef __cplusplus

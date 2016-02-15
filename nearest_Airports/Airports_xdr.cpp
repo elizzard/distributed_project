@@ -26,3 +26,23 @@ xdr_coordinates_airport (XDR *xdrs, coordinates_airport *objp)
 		 return FALSE;
 	return TRUE;
 }
+bool_t
+xdr_airports_server_ret (XDR *xdrs, airports_server_ret *objp)
+{
+        register int32_t *buf;
+
+         if (!xdr_int (xdrs, &objp->err))
+                 return FALSE;
+        switch (objp->err) {
+        case 0:
+                 if (!xdr_nearestairportnames (xdrs, &objp->airports_server_ret_u.airports))
+                         return FALSE;
+                break;
+        case 1:
+                break;
+        default:
+                return FALSE;
+        }
+        return TRUE;
+}
+      

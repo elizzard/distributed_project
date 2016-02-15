@@ -22,7 +22,7 @@ static void
 places_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
-		airportname get_coordinates_1_arg;
+		places_input get_coordinates_1_arg;
 	      } argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -34,8 +34,8 @@ places_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		return;
 
 	case GET_COORDINATES:
-		_xdr_argument = (xdrproc_t) xdr_airportname;
-		_xdr_result = (xdrproc_t) xdr_nearestairports;
+		_xdr_argument = (xdrproc_t) xdr_places_input;
+		_xdr_result = (xdrproc_t) xdr_airports_ret;
 		local = (char *(*)(char *, struct svc_req *)) get_coordinates_1_svc;
 		break;
 
@@ -62,15 +62,15 @@ places_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 //Client code for calling Airport
 static struct timeval TIMEOUT = { 25, 0 };
 
-nearestairportnames *
+airports_server_ret *
 get_five_nearest_airports_1(coordinates_airport *argp, CLIENT *clnt)
 {
-        static nearestairportnames clnt_res;
+        static airports_server_ret clnt_res;
 
         memset((char *)&clnt_res, 0, sizeof(clnt_res));
         if (clnt_call (clnt, GET_FIVE_NEAREST_AIRPORTS,
                 (xdrproc_t) xdr_coordinates_airport, (caddr_t) argp,
-                (xdrproc_t) xdr_nearestairportnames, (caddr_t) &clnt_res,
+                (xdrproc_t) xdr_airports_server_ret, (caddr_t) &clnt_res,
                 TIMEOUT) != RPC_SUCCESS) {
                 return (NULL);
         }

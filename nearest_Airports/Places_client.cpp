@@ -14,8 +14,10 @@ void
 places_prog_1(char *name,char *host)
 {
 	CLIENT *clnt;
-	nearestairports *result_1;
-	airportname  airportName;
+	airports_ret  *result_1;
+	places_input  get_coordinates_1_arg;
+	get_coordinates_1_arg.apname = name;
+	get_coordinates_1_arg.hostname = host;
 
 
 
@@ -26,15 +28,19 @@ places_prog_1(char *name,char *host)
 		exit (1);
 	}
 #endif	/* DEBUG */
-	airportName = name;
-	cout<<"Airport Name is"<<airportName<<endl;
-	result_1 = get_coordinates_1(&airportName, clnt);
-	if (result_1 == (nearestairports *) NULL) {
+	
+	result_1 = get_coordinates_1(&get_coordinates_1_arg, clnt);
+	if (result_1 == (airports_ret *) NULL) {
 		clnt_perror (clnt, "call failed");
+	}
+	if(result_1->err ==1)
+	{
+	cout<<"Unable to locate the place"<<endl;
 	}
 	else
 	{
-		cout<<result_1<<endl;
+		nearestairports airports = result_1->airports_ret_u.airports;
+		cout<<airports<<endl;
 	}
 #ifndef DEBUG	/*TODO :DELETE THIS*/
 	clnt_destroy (clnt);
