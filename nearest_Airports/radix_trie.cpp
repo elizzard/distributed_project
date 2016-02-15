@@ -154,6 +154,7 @@ int RadixTrie::insert(string word, float lat, float lon){
 // result 	is meaningful only on positive return value
 int RadixTrie::find(string& word, Coord& result){
 	int word_pos, node_pos;
+	cout<<"In Radix Tree find"<<endl;
 	// find insert position
 	TNode* node = match(&word, root, word_pos, node_pos);
 	
@@ -162,6 +163,7 @@ int RadixTrie::find(string& word, Coord& result){
 		if (node->data){ // match
 			result.lat = node->data->lat;
 			result.lon = node->data->lon;
+			cout<<"In Radix Treeeee"<<result.lat<<"&"<<result.lon<<endl;
 			return 0; 
 		} else { // prefix to more than one
 			return -2;

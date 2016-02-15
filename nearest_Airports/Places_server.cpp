@@ -14,10 +14,13 @@ using namespace std;
 coordinates* 
 get_coordinates_1_svc(airportname *argp, struct svc_req *rqstp)
 {
+	cout<<"In Places_Server"<<endl;
 	static coordinates result ;
-	string s = *argp;				
+	string s = *argp;
+	cout<<"Airport name in Places_server"<<s<<endl;				
 	/* strip designation*/
 	stripDesignation(s);	/* shoudld do nothing*/
+	cout<<"After strip designations"<<endl;
 	/* do search*/
 	Coord xy(360,360); 		/* this is where coordinate values will be returned*/
 	int res = db->find(s, xy);	
@@ -30,8 +33,10 @@ get_coordinates_1_svc(airportname *argp, struct svc_req *rqstp)
 
 	else
 	{
+	cout<<"In Else Places_server"<<endl;
         result.lat = xy.lat;
         result.lon = xy.lon;
+	cout<<"lat"<<result.lat<<"lon"<<result.lon<<endl;
 	}
 
 	

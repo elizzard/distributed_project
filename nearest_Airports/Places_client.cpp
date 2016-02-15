@@ -27,7 +27,7 @@ places_prog_1(char *name,char *host)
 	}
 #endif	/* DEBUG */
 	airportName = name;
-
+	cout<<"Airport Name is"<<airportName<<endl;
 	result_1 = get_coordinates_1(&airportName, clnt);
 	if (result_1 == (coordinates *) NULL) {
 		clnt_perror (clnt, "call failed");
@@ -61,10 +61,12 @@ main (int argc, char *argv[])
 	
 	char *city = argv[2];
 	char *state = argv[3];
-	int size = strlen(city) + strlen(state) +1;
+	int size = strlen(city) + strlen(state) +2;
 	char *name = (char *)malloc(size);
 	strcpy(name,city);
+	strcat(name," ");
 	strcat(name,state);
+	cout<<"Place name is "<<name<<endl;
 	places_prog_1 (name,host);
 exit (0);
 }
