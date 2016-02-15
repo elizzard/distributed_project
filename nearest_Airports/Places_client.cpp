@@ -59,8 +59,12 @@ main (int argc, char *argv[])
 	host = argv[1];
 	/*Converting char to string*/
 	
-	char *name = argv[2];
-	 
+	char *city = argv[2];
+	char *state = argv[3];
+	int size = strlen(city) + strlen(state) +1;
+	char *name = (char *)malloc(size);
+	strcpy(name,city);
+	strcat(name,state);
 	places_prog_1 (name,host);
 exit (0);
 }

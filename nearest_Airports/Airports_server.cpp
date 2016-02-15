@@ -147,8 +147,8 @@ get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp
 
 	
         double arr1[3];
-        arr1[0] = agrp.lat; 
-        arr1[1] = argp.lon;
+        arr1[0] = argp->lat;
+        arr1[1] = argp->lon;
         arr1[2] = 0.0;
 
         double arr2[3];
@@ -199,7 +199,7 @@ get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp
                 str = str.append(out.str());
                 count1++;
         }
-        result = str;
+        result = StrToChar(str);
 
 	return &result;
 }

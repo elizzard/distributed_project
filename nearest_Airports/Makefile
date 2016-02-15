@@ -7,20 +7,17 @@ CLIENT = Places_client
 SERVER1 = Places_server
 SERVER2 = Airports_server
 
-SOURCES_CLNT.cpp = 
-SOURCES_CLNT.h = 
-SOURCES_SVC.cpp = 
-SOURCES_SVC.h = 
-SOURCES.x = Places.x Airports.x
+RADIX_TRIE_TARGETS = radix_trie.h radix_trie.cpp
+FILE_PROC_TARGETS = file_proc.h file_proc.cpp $(RADIX_TRIE_TARGETS)
 
-TARGETS_SVC1.cpp = Places_svc.cpp Places_server.cpp Places_xdr.cpp Airports_xdr.cpp radix_trie.cpp file_proc.cpp
-TARGETS_SVC2.cpp =Airports_svc.cpp Airports_server.cpp Airports_xdr.cpp kdtree.cpp
-TARGETS_CLNT.cpp = Places_clnt.cpp Places_client.cpp Places_xdr.cpp 
-TARGETS = Airports.h Airports_xdr.cpp Airports_svc.cpp Airports_server.cpp kdtree.h kdtree.cpp radix_trie.h radix_trie.cpp file_proc.h file_proc.cpp  Places_xdr.cpp Places_svc.cpp Places_server.cpp
+TARGETS_SVC1.cpp = Places_svc.cpp Places_server.cpp Places_xdr.cpp Places.h Airports_xdr.cpp Airports_clnt.cpp Airports.h $(FILE_PROC_TARGETS)
+TARGETS_SVC2.cpp = Airports_svc.cpp Airports_server.cpp Airports_xdr.cpp Airports.h kdtree.cpp kdtree.h
+TARGETS_CLNT.cpp = Places_clnt.cpp Places_client.cpp Places_xdr.cpp Places.h
+#TARGETS = Airports.h Airports_xdr.cpp Airports_svc.cpp Airports_server.cpp kdtree.h kdtree.cpp radix_trie.h radix_trie.cpp file_proc.h file_proc.cpp  Places_xdr.cpp Places_svc.cpp Places_server.cpp
 
-OBJECTS_CLNT = $(SOURCES_CLNT.cpp:%.cpp=%.o) $(TARGETS_CLNT.cpp:%.cpp=%.o)
-OBJECTS_SVC1 = $(SOURCES_SVC.cpp:%.cpp=%.o) $(TARGETS_SVC1.cpp:%.cpp=%.o)
-OBJECTS_SVC2 = $(SOURCES_SVC.cpp:%.cpp=%.o) $(TARGETS_SVC2.cpp:%.cpp=%.o)
+OBJECTS_CLNT = $(TARGETS_CLNT.cpp:%.cpp=%.o)
+OBJECTS_SVC1 = $(TARGETS_SVC1.cpp:%.cpp=%.o)
+OBJECTS_SVC2 = $(TARGETS_SVC2.cpp:%.cpp=%.o)
 # Compiler flags 
 
 CXX = g++
@@ -32,14 +29,6 @@ RPCGENFLAGS =
 
 all : $(CLIENT) $(SERVER1) $(SERVER2)
 
-$(TARGETS) : $(SOURCES.x) 
-	
-$(OBJECTS_CLNT) : $(SOURCES_CLNT.cpp) $(SOURCES_CLNT.h) $(TARGETS_CLNT.cpp) 
-
-$(OBJECTS_SVC1) : $(SOURCES_SVC.cpp) $(SOURCES_SVC.h) $(TARGETS_SVC1.cpp)
-$(OBJECTS_SVC2) : $(SOURCES_SVC.cpp) $(SOURCES_SVC.h) $(TARGETS_SVC2.cpp)
- 
-
 $(CLIENT) : $(OBJECTS_CLNT) 
 	$(LINK.cpp) -o $(CLIENT) $(OBJECTS_CLNT) $(LDLIBS) 
 
@@ -47,5 +36,7 @@ $(SERVER1) : $(OBJECTS_SVC1)
 	$(LINK.cpp) -o $(SERVER1) $(OBJECTS_SVC1) $(LDLIBS)
 $(SERVER2) : $(OBJECTS_SVC2)
 	$(LINK.cpp) -o $(SERVER2) $(OBJECTS_SVC2) $(LDLIBS)
-clean: $(RM) core $(TARGETS) $(OBJECTS_CLNT) $(OBJECTS_SVC1) $(OBJECTS_SVC2)$(CLIENT) $(SERVER1) $(SERVER2)
+
+clean:
+	 $(RM) *.o $(CLIENT) $(SERVER1) $(SERVER2) core
 
