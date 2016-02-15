@@ -4,6 +4,7 @@
  */
 
 #include "Places.h"
+#include "Airports.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <rpc/pmap_clnt.h>
@@ -22,8 +23,7 @@ places_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
 		airportname get_coordinates_1_arg;
-		coordinates get_nearest_airports_1_arg;
-	} argument;
+	      } argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
 	char *(*local)(char *, struct svc_req *);
@@ -39,11 +39,6 @@ places_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		local = (char *(*)(char *, struct svc_req *)) get_coordinates_1_svc;
 		break;
 
-	case GET_NEAREST_AIRPORTS:
-		_xdr_argument = (xdrproc_t) xdr_coordinates;
-		_xdr_result = (xdrproc_t) xdr_nearestairports;
-		local = (char *(*)(char *, struct svc_req *)) get_nearest_airports_1_svc;
-		break;
 
 	default:
 		svcerr_noproc (transp);
@@ -63,6 +58,23 @@ places_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		exit (1);
 	}
 	return;
+}
+//Client code for calling Airport
+static struct timeval TIMEOUT = { 25, 0 };
+
+nearestairportnames *
+get_five_nearest_airports_1(coordinates_airport *argp, CLIENT *clnt)
+{
+        static nearestairportnames clnt_res;
+
+        memset((char *)&clnt_res, 0, sizeof(clnt_res));
+        if (clnt_call (clnt, GET_FIVE_NEAREST_AIRPORTS,
+                (xdrproc_t) xdr_coordinates_airport, (caddr_t) argp,
+                (xdrproc_t) xdr_nearestairportnames, (caddr_t) &clnt_res,
+                TIMEOUT) != RPC_SUCCESS) {
+                return (NULL);
+        }
+        return (&clnt_res);
 }
 
 int

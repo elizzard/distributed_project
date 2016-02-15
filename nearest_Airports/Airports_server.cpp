@@ -143,6 +143,7 @@ static double dist_sq(double lat1, double lon1, double lat2, double lon2)
 nearestairportnames *
 get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp)
 {
+	cout<<"In Airports Server"<<endl;
 	static nearestairportnames  result;
 
 	
@@ -200,6 +201,6 @@ get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp
                 count1++;
         }
         result = StrToChar(str);
-
+	cout<<"FINALLLLYYYy"<<result<<endl;
 	return &result;
 }

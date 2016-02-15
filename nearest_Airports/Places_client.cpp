@@ -14,10 +14,10 @@ void
 places_prog_1(char *name,char *host)
 {
 	CLIENT *clnt;
-	coordinates  *result_1;
+	nearestairports *result_1;
 	airportname  airportName;
-	nearestairports  *result_2;
-	coordinates  placeCoordinates;
+
+
 
 #ifndef	DEBUG
 	clnt = clnt_create (host, PLACES_PROG, PLACES_VERS, "tcp");
@@ -29,19 +29,14 @@ places_prog_1(char *name,char *host)
 	airportName = name;
 	cout<<"Airport Name is"<<airportName<<endl;
 	result_1 = get_coordinates_1(&airportName, clnt);
-	if (result_1 == (coordinates *) NULL) {
+	if (result_1 == (nearestairports *) NULL) {
 		clnt_perror (clnt, "call failed");
 	}
-	/*else
+	else
 	{
-		placeCoordinates = result_1;
-	}*/
-	result_2 = get_nearest_airports_1(result_1, clnt);
-	if (result_2 == (nearestairports *) NULL) {
-		clnt_perror (clnt, "call failed");
+		cout<<result_1<<endl;
 	}
-	cout<<"%%%%%%%"<<result_2;
-#ifndef	DEBUG
+#ifndef DEBUG	/*TODO :DELETE THIS*/
 	clnt_destroy (clnt);
 #endif	 /* DEBUG */
 }

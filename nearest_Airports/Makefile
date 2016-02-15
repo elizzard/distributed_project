@@ -10,7 +10,7 @@ SERVER2 = Airports_server
 RADIX_TRIE_TARGETS = radix_trie.h radix_trie.cpp
 FILE_PROC_TARGETS = file_proc.h file_proc.cpp $(RADIX_TRIE_TARGETS)
 
-TARGETS_SVC1.cpp = Places_svc.cpp Places_server.cpp Places_xdr.cpp Places.h Airports_xdr.cpp Airports_clnt.cpp Airports.h $(FILE_PROC_TARGETS)
+TARGETS_SVC1.cpp = Places_svc.cpp Places_server.cpp Places_xdr.cpp Places.h Airports_xdr.cpp Airports.h $(FILE_PROC_TARGETS)
 TARGETS_SVC2.cpp = Airports_svc.cpp Airports_server.cpp Airports_xdr.cpp Airports.h kdtree.cpp kdtree.h
 TARGETS_CLNT.cpp = Places_clnt.cpp Places_client.cpp Places_xdr.cpp Places.h
 #TARGETS = Airports.h Airports_xdr.cpp Airports_svc.cpp Airports_server.cpp kdtree.h kdtree.cpp radix_trie.h radix_trie.cpp file_proc.h file_proc.cpp  Places_xdr.cpp Places_svc.cpp Places_server.cpp
