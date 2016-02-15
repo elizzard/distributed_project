@@ -207,9 +207,9 @@ get_five_nearest_airports_1_svc(coordinates_airport *argp, struct svc_req *rqstp
 	
 	//result.airports_server_ret_u.airports =(nearestairportnames)malloc(sizeof(nearestairportnames)); 
         //result.airports_server_ret_u.airports = airportnames ;
-	*airportnames = airportsList;
+	*airportnames =airportsList;
 	result.err=0;
-	result.airports_server_ret_u.airports = *airportnames;
+	//result.airports_server_ret_u.airports = *airportnames;
 	cout<<"FINALLLLYYYy"<< result.airports_server_ret_u.airports<<endl;
 	return &result;
 }
