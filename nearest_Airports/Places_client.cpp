@@ -53,7 +53,7 @@ main (int argc, char *argv[])
 {
 	char *host;
 	
-	if (argc < 2) {
+	if (argc < 3) {
 		printf ("usage: %s server_host\n", argv[0]);
 		exit (1);
 	}

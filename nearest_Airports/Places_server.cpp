@@ -8,6 +8,7 @@
 #include "file_proc.h"
 #include <iostream>
 #include "Airports.h"
+#include <sstream>
 using namespace std;
 
 struct coordinates
@@ -85,10 +86,17 @@ get_coordinates_1_svc(places_input *argp, struct svc_req *rqstp)
 	      
 	
 	nearestairportnames output_from_airport =nearestnames->airports_server_ret_u.airports;
-	string sss = output_from_airport;
+	
 	nearestairports nap;
-	nap =(nearestairports)malloc(sizeof(output_from_airport));
-	nap = output_from_airport;
+	nap =(nearestairports)malloc(sizeof(output_from_airport)+sizeof(points)+sizeof(s));
+	double latitude,longitude;
+	string latlon;
+	ostringstream out;
+	out<<s<<":"<<points.lat<<","<<points.lon<<endl;
+	latlon = latlon.append(out.str());
+	//nap = output_from_airport;
+	strcpy(nap,toChar(latlon));
+	strcat(nap,output_from_airport);
         airportnames.airports_ret_u.airports = nap;
         airportnames.err = 0;
         return &airportnames;
